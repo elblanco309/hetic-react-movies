@@ -1,11 +1,12 @@
 .card {
-    border: 1px solid #e0e0e0;
+    background-color: #1f1f1f;
+    border: 1px solid #333;
     border-radius: 8px;
     padding: 12px 16px;
-    background-color: #fafafa;
     display: flex;
     flex-direction: column;
     gap: 8px;
+    color: #fff;
 }
 
 .header {
@@ -23,7 +24,7 @@
 .comment {
     margin: 0;
     font-size: 0.9rem;
-    color: #444;
+    color: #ccc;
     line-height: 1.5;
 }
 
@@ -41,38 +42,53 @@
 }
 
 .btnDelete {
-    background-color: #e53935;
+    background-color: #E50914;
     color: #fff;
 }
 
 .btnDelete:hover {
-    background-color: #b71c1c;
+    background-color: #b20710;
 }
 
 .btnEdit {
-    background-color: #1e88e5;
+    background-color: #444;
     color: #fff;
 }
 
 .btnEdit:hover {
-    background-color: #1565c0;
+    background-color: #555;
 }
 
-.editForm button {
-    border: none;
-    cursor: pointer;
-    font-size: 0.8rem;
+.editForm {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .editForm input,
 .editForm textarea {
-    padding: 6px 8px;
-    border: 1px solid #ccc;
+    padding: 8px 10px;
+    background-color: #2a2a2a;
+    color: #fff;
+    border: 1px solid #555;
     border-radius: 4px;
     font-size: 0.9rem;
+    outline: none;
 }
 
+.editForm input:focus,
+.editForm textarea:focus {
+    border-color: #E50914;
+}
 
+.editForm button {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: fit-content;
+}
 
 .btnValidate {
     background-color: green !important;
@@ -83,7 +99,7 @@
 }
 
 .btnValidate:hover {
-    background-color: #1b5e20;
+    background-color: #1b5e20 !important;
 }
 
 .btnCancel {
@@ -95,6 +111,7 @@
     cursor: pointer;
     font-size: 0.8rem;
 }
+
 .btnCancel:hover {
     background-color: #424242 !important;
 }

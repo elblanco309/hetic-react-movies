@@ -1,10 +1,11 @@
 import { NavLink } from "react-router";
 import styles from "./NavBar.module.css";
+import Logo from "./Logo";
 
 function NavBar() {
     return (
         <nav className={styles.nav}>
-            <h1 className={styles.brand}>🎬 CinePulse</h1>
+            <Logo />
              <div className={styles.links}>
                 <NavLink
                     to="/"

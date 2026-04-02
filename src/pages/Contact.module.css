@@ -2,12 +2,15 @@
     max-width: 600px;
     margin: 40px auto;
     padding: 0 24px;
+    color: #e5e5e5;
+    background-color: #141414;
 }
 
 .title {
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 24px;
+    color: #fff;
 }
 
 .form {
@@ -19,45 +22,58 @@
 .label {
     font-size: 0.9rem;
     font-weight: 600;
-    color: #333;
+    color: #aaa;
 }
 
 .input {
     padding: 10px 12px;
-    border: 1px solid #ccc;
+    border: 1px solid #444;
     border-radius: 6px;
     font-size: 1rem;
     outline: none;
+    background-color: #2a2a2a;
+    color: #fff;
 }
 
 .input:focus {
-    border-color: #1e88e5;
+    border-color: #E50914;
+}
+
+.input::placeholder {
+    color: #666;
 }
 
 .textarea {
     padding: 10px 12px;
-    border: 1px solid #ccc;
+    border: 1px solid #444;
     border-radius: 6px;
     font-size: 1rem;
     resize: vertical;
     outline: none;
+    background-color: #2a2a2a;
+    color: #fff;
 }
 
 .textarea:focus {
-    border-color: #1e88e5;
+    border-color: #E50914;
+}
+
+.textarea::placeholder {
+    color: #666;
 }
 
 .button {
     align-self: flex-start;
     padding: 10px 24px;
-    background-color: #1e88e5;
+    background-color: #E50914;
     color: #fff;
     border: none;
     border-radius: 6px;
     font-size: 1rem;
     cursor: pointer;
+    font-weight: 600;
 }
 
 .button:hover {
-    background-color: #1565c0;
+    background-color: #b20710;
 }

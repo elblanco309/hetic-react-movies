@@ -11,12 +11,13 @@ function Home() {
     );
 
     return (
-        <div>
-            <h1>🎬 Films</h1>
+        <div className={styles.page}>
+            <h1 className={styles.title}>🎬 Films</h1>
             <input
                 type="text"
                 placeholder="Rechercher un film..."
                 onChange={(e) => setSearch(e.target.value)}
+                className={styles.search}
             />
             <div className={styles.grid}>
                 {filteredMovies.map((movie) => (

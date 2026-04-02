@@ -32,6 +32,40 @@
     color: #888;
 }
 
+.genreFilters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+
+.genreButton {
+    padding: 8px 16px;
+    background-color: #2a2a2a;
+    color: #ccc;
+    border: 1px solid #444;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.genreButton:hover {
+    border-color: #E50914;
+    color: #fff;
+}
+
+.genreButtonActive {
+    padding: 8px 16px;
+    background-color: #E50914;
+    color: #fff;
+    border: 1px solid #E50914;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-weight: 600;
+}
+
 .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

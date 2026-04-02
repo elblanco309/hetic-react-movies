@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import movies from '../data/movies';
 import styles from './MovieDetail.module.css';
@@ -6,8 +7,33 @@ function MovieDetail() {
     const { id } = useParams();
     const movie = movies.find((m) => m.id === Number(id));
 
+    const [reviews, setReviews] = useState(() => {
+        const saved = localStorage.getItem('reviews-' + id);
+        return saved ? JSON.parse(saved) : [];
+    });
+    const [username, setUsername] = useState('');
+    const [comment, setComment] = useState('');
+    const [rating, setRating] = useState(5);
+
+    useEffect(() => {
+        localStorage.setItem('reviews-' + id, JSON.stringify(reviews));
+    }, [reviews]);
+
     if (!movie) {
         return <p>Film non trouvé</p>;
+    }
+
+    function handleAddReview() {
+        const newReview = {
+            id: Date.now(),
+            username,
+            comment,
+            rating,
+        };
+        setReviews([...reviews, newReview]);
+        setUsername('');
+        setComment('');
+        setRating(5);
     }
 
     return (
@@ -24,6 +50,38 @@ function MovieDetail() {
                 <div className={styles.detail}><strong>Réalisateur :</strong> {movie.director}</div>
                 <div className={styles.detail}><strong>Studio :</strong> {movie.studio}</div>
                 <div className={styles.rating}>{'★'.repeat(movie.rating)}{'☆'.repeat(5 - movie.rating)}</div>
+
+                <div className={styles.reviewForm}>
+                    <h2>Ajouter une review</h2>
+                    <input
+                        type="text"
+                        placeholder="Votre nom"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
+                    <input
+                        type="number"
+                        min="1"
+                        max="5"
+                        value={rating}
+                        onChange={(e) => setRating(Number(e.target.value))}
+                    />
+                    <textarea
+                        placeholder="Votre commentaire"
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                    />
+                    <button onClick={handleAddReview}>Ajouter une review</button>
+                </div>
+
+                <div className={styles.reviewList}>
+                    {reviews.map((review) => (
+                        <div key={review.id} className={styles.reviewItem}>
+                            <strong>{review.username}</strong> — {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+                            <p>{review.comment}</p>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );

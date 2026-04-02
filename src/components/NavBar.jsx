@@ -1,24 +1,26 @@
 import { NavLink } from "react-router";
+import styles from "./NavBar.module.css";
 
 function NavBar() {
     return (
-        <nav>
-            <h1>EEEEEEE</h1>
-             <div>
+        <nav className={styles.nav}>
+            <h1 className={styles.brand}>🎬 CinePulse</h1>
+             <div className={styles.links}>
                 <NavLink
-                    to="/home"
+                    to="/"
+                    className={({ isActive }) => isActive ? styles.linkActive : styles.link}
                 >
                     Home
                 </NavLink>
-                <br/>
                 <NavLink
                     to="/about"
+                    className={({ isActive }) => isActive ? styles.linkActive : styles.link}
                 >
                     About
                 </NavLink>
-                <br/>
                 <NavLink
                     to="/contact"
+                    className={({ isActive }) => isActive ? styles.linkActive : styles.link}
                 >
                     Contact
                 </NavLink>

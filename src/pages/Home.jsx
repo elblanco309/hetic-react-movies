@@ -11,6 +11,7 @@ function Home() {
                     <MovieCard
                         key={movie.id}
                         title={movie.title}
+                        movieId={movie.id}
                         year={movie.year}
                         genre={movie.genre}
                         description={movie.description}

@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router';
+import { useParams, useNavigate } from 'react-router';
 import movies from '../data/movies';
 import styles from './MovieDetail.module.css';
 import ReviewCard from '../components/ReviewCard';
 
 function MovieDetail() {
     const { id } = useParams();
+    const navigate = useNavigate();
     const movie = movies.find((m) => m.id === Number(id));
 
     const [reviews, setReviews] = useState(() => {
@@ -53,6 +54,7 @@ function MovieDetail() {
 
     return (
         <div className={styles.container}>
+            <button className={styles.backButton} onClick={() => navigate(-1)}>← Retour</button>
             <img src={movie.image} alt={movie.title} className={styles.image} />
             <div className={styles.info}>
                 <h1 className={styles.title}>{movie.title}</h1>

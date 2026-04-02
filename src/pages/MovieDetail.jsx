@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import movies from '../data/movies';
 import styles from './MovieDetail.module.css';
+import ReviewCard from '../components/ReviewCard';
 
 function MovieDetail() {
     const { id } = useParams();
@@ -14,6 +15,9 @@ function MovieDetail() {
     const [username, setUsername] = useState('');
     const [comment, setComment] = useState('');
     const [rating, setRating] = useState(5);
+    const [editingId, setEditingId] = useState(null);
+    const [editComment, setEditComment] = useState('');
+    const [editRating, setEditRating] = useState(5);
 
     useEffect(() => {
         localStorage.setItem('reviews-' + id, JSON.stringify(reviews));
@@ -21,6 +25,17 @@ function MovieDetail() {
 
     if (!movie) {
         return <p>Film non trouvé</p>;
+    }
+
+    function handleDeleteReview(reviewId) {
+        setReviews(reviews.filter((r) => r.id !== reviewId));
+    }
+
+    function handleEditReview(reviewId) {
+        setReviews(reviews.map((r) =>
+            r.id === reviewId ? { ...r, comment: editComment, rating: editRating } : r
+        ));
+        setEditingId(null);
     }
 
     function handleAddReview() {
@@ -76,10 +91,18 @@ function MovieDetail() {
 
                 <div className={styles.reviewList}>
                     {reviews.map((review) => (
-                        <div key={review.id} className={styles.reviewItem}>
-                            <strong>{review.username}</strong> — {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
-                            <p>{review.comment}</p>
-                        </div>
+                        <ReviewCard
+                            key={review.id}
+                            review={review}
+                            onDelete={handleDeleteReview}
+                            onEdit={handleEditReview}
+                            editingId={editingId}
+                            editComment={editComment}
+                            editRating={editRating}
+                            setEditComment={setEditComment}
+                            setEditRating={setEditRating}
+                            setEditingId={setEditingId}
+                        />
                     ))}
                 </div>
             </div>

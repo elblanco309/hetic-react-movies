@@ -1,0 +1,100 @@
+.card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    background-color: #fafafa;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.stars {
+    color: #f5a623;
+    font-size: 1rem;
+    letter-spacing: 2px;
+}
+
+.comment {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #444;
+    line-height: 1.5;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+}
+
+.actions button {
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btnDelete {
+    background-color: #e53935;
+    color: #fff;
+}
+
+.btnDelete:hover {
+    background-color: #b71c1c;
+}
+
+.btnEdit {
+    background-color: #1e88e5;
+    color: #fff;
+}
+
+.btnEdit:hover {
+    background-color: #1565c0;
+}
+
+.editForm button {
+    border: none;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.editForm input,
+.editForm textarea {
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+
+
+.btnValidate {
+    background-color: green !important;
+    color: #fff !important;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 10px;
+}
+
+.btnValidate:hover {
+    background-color: #1b5e20;
+}
+
+.btnCancel {
+    background-color: #757575 !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 4px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+.btnCancel:hover {
+    background-color: #424242 !important;
+}

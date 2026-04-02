@@ -1,13 +1,25 @@
+import { useState } from 'react';
 import movies from '../data/movies';
 import MovieCard from '../components/MovieCard';
 import styles from './Home.module.css';
 
 function Home() {
+    const [search, setSearch] = useState('');
+
+    const filteredMovies = movies.filter((movie) =>
+        movie.title.toLowerCase().includes(search.toLowerCase())
+    );
+
     return (
         <div>
             <h1>🎬 Films</h1>
+            <input
+                type="text"
+                placeholder="Rechercher un film..."
+                onChange={(e) => setSearch(e.target.value)}
+            />
             <div className={styles.grid}>
-                {movies.map((movie) => (
+                {filteredMovies.map((movie) => (
                     <MovieCard
                         key={movie.id}
                         title={movie.title}

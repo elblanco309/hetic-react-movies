@@ -64,6 +64,52 @@
     letter-spacing: 3px;
 }
 
+.ratingImdb {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ratingLabel {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #f5a623;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stars {
+    font-size: 1.3rem;
+    color: #f5a623;
+    letter-spacing: 2px;
+}
+
+.ratingUsers {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ratingLabelBlue {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1e88e5;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.starsBlue {
+    font-size: 1.3rem;
+    color: #1e88e5;
+    letter-spacing: 2px;
+}
+
+.noReviews {
+    font-size: 0.9rem;
+    color: #666;
+    font-style: italic;
+}
+
 .reviewForm {
     background-color: #1f1f1f;
     border-radius: 10px;

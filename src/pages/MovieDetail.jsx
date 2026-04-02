@@ -64,7 +64,25 @@ function MovieDetail() {
                 <p className={styles.description}>{movie.description}</p>
                 <div className={styles.detail}><strong>Réalisateur :</strong> {movie.director}</div>
                 <div className={styles.detail}><strong>Studio :</strong> {movie.studio}</div>
-                <div className={styles.rating}>{'★'.repeat(movie.rating)}{'☆'.repeat(5 - movie.rating)}</div>
+                <div className={styles.ratingImdb}>
+                    <span className={styles.ratingLabel}>Note IMDB</span>
+                    <span className={styles.stars}>{'★'.repeat(movie.rating)}{'☆'.repeat(5 - movie.rating)}</span>
+                </div>
+                <div className={styles.ratingUsers}>
+                    <span className={styles.ratingLabelBlue}>
+                        {reviews.length > 0 ? `Note utilisateurs (${reviews.length} avis)` : 'Note utilisateurs'}
+                    </span>
+                    {reviews.length > 0 ? (
+                        <span className={styles.starsBlue}>
+                            {(() => {
+                                const avg = Math.round(reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length);
+                                return '★'.repeat(avg) + '☆'.repeat(5 - avg);
+                            })()}
+                        </span>
+                    ) : (
+                        <span className={styles.noReviews}>Aucun avis pour l'instant</span>
+                    )}
+                </div>
 
                 <div className={styles.reviewForm}>
                     <h2>Ajouter une review</h2>

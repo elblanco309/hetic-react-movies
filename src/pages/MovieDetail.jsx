@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router';
-import movies from '../data/movies';
+import { fetchMovieDetails, IMAGE_URL } from '../services/tmdb';
 import styles from './MovieDetail.module.css';
 import ReviewCard from '../components/ReviewCard';
 import { useAuth } from '../context/AuthContext';
@@ -9,7 +9,15 @@ function MovieDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
-    const movie = movies.find((m) => m.id === Number(id));
+    const [movie, setMovie] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetchMovieDetails(id).then((data) => {
+            setMovie(data);
+            setLoading(false);
+        });
+    }, [id]);
 
     const [reviews, setReviews] = useState(() => {
         const saved = localStorage.getItem('reviews-' + id);
@@ -25,9 +33,8 @@ function MovieDetail() {
         localStorage.setItem('reviews-' + id, JSON.stringify(reviews));
     }, [reviews]);
 
-    if (!movie) {
-        return <p>Film non trouvé</p>;
-    }
+    if (loading) return <p>Chargement...</p>;
+    if (!movie) return <p>Film non trouvé</p>;
 
     function handleDeleteReview(reviewId) {
         setReviews(reviews.filter((r) => r.id !== reviewId));
@@ -55,20 +62,18 @@ function MovieDetail() {
     return (
         <div className={styles.container}>
             <button className={styles.backButton} onClick={() => navigate(-1)}>← Retour</button>
-            <img src={movie.image} alt={movie.title} className={styles.image} />
+            <img src={IMAGE_URL + movie.poster_path} alt={movie.title} className={styles.image} />
             <div className={styles.info}>
                 <h1 className={styles.title}>{movie.title}</h1>
                 <div className={styles.meta}>
-                    <span>{movie.year}</span>
-                    <span className={styles.genre}>{movie.genre}</span>
-                    <span>{movie.duration} min</span>
+                    <span>{movie.release_date?.slice(0, 4)}</span>
+                    <span className={styles.genre}>{movie.genres?.[0]?.name}</span>
+                    <span>{movie.runtime} min</span>
                 </div>
-                <p className={styles.description}>{movie.description}</p>
-                <div className={styles.detail}><strong>Réalisateur :</strong> {movie.director}</div>
-                <div className={styles.detail}><strong>Studio :</strong> {movie.studio}</div>
+                <p className={styles.description}>{movie.overview}</p>
                 <div className={styles.ratingImdb}>
-                    <span className={styles.ratingLabel}>Note IMDB</span>
-                    <span className={styles.stars}>{'★'.repeat(movie.rating)}{'☆'.repeat(5 - movie.rating)}</span>
+                    <span className={styles.ratingLabel}>Note TMDB</span>
+                    <span className={styles.stars}>{movie.vote_average?.toFixed(1)} / 10</span>
                 </div>
                 <div className={styles.ratingUsers}>
                     <span className={styles.ratingLabelBlue}>

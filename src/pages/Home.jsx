@@ -1,18 +1,50 @@
-import { useState } from 'react';
-import movies from '../data/movies';
+import { useState, useEffect, useRef } from 'react';
+import { fetchPopularMovies, searchMovies, IMAGE_URL } from '../services/tmdb';
 import MovieCard from '../components/MovieCard';
 import styles from './Home.module.css';
 
 function Home() {
     const [search, setSearch] = useState('');
-    const [genre, setGenre] = useState('');
+    const [movies, setMovies] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const sentinelRef = useRef(null);
 
-    const genres = ['', ...movies.map((m) => m.genre).filter((g, i, arr) => arr.indexOf(g) === i)];
+    useEffect(() => {
+        setLoading(true);
+        if (search === '') {
+            fetchPopularMovies(page).then((results) => {
+                if (results.length < 20) setHasMore(false);
+                setMovies((prev) => page === 1 ? results : [...prev, ...results]);
+                setLoading(false);
+            });
+        } else {
+            searchMovies(search).then((results) => {
+                if (results.length < 20) setHasMore(false);
+                setMovies((prev) => page === 1 ? results : [...prev, ...results]);
+                setLoading(false);
+            });
+        }
+    }, [search, page]);
 
-    const filteredMovies = movies.filter((movie) =>
-        movie.title.toLowerCase().includes(search.toLowerCase()) &&
-        (genre === '' || movie.genre === genre)
-    );
+    useEffect(() => {
+        setPage(1);
+        setMovies([]);
+        setHasMore(true);
+    }, [search]);
+
+    useEffect(() => {
+        if (!hasMore) return;
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                setPage((prev) => prev + 1);
+            }
+        });
+        const sentinel = sentinelRef.current;
+        if (sentinel) observer.observe(sentinel);
+        return () => { if (sentinel) observer.unobserve(sentinel); };
+    }, [hasMore, movies]);
 
     return (
         <div className={styles.page}>
@@ -23,31 +55,22 @@ function Home() {
                 onChange={(e) => setSearch(e.target.value)}
                 className={styles.search}
             />
-            <div className={styles.genreFilters}>
-                {genres.map((g) => (
-                    <button
-                        key={g}
-                        onClick={() => setGenre(g)}
-                        className={genre === g ? styles.genreButtonActive : styles.genreButton}
-                    >
-                        {g === '' ? 'Tous' : g}
-                    </button>
-                ))}
-            </div>
             <div className={styles.grid}>
-                {filteredMovies.map((movie) => (
+                {movies.map((movie) => (
                     <MovieCard
                         key={movie.id}
                         title={movie.title}
                         movieId={movie.id}
-                        year={movie.year}
+                        year={movie.release_date?.slice(0, 4)}
                         genre={movie.genre}
-                        description={movie.description}
-                        image={movie.image}
-                        rating={movie.rating}
+                        description={movie.overview}
+                        image={IMAGE_URL + movie.poster_path}
+                        rating={movie.vote_average / 2}
                     />
                 ))}
             </div>
+            {loading && <p>Chargement...</p>}
+            <div ref={sentinelRef} />
         </div>
     );
 }

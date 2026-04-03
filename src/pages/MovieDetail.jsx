@@ -1,19 +1,20 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router';
+import { useParams, useNavigate, Link } from 'react-router';
 import movies from '../data/movies';
 import styles from './MovieDetail.module.css';
 import ReviewCard from '../components/ReviewCard';
+import { useAuth } from '../context/AuthContext';
 
 function MovieDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { user } = useAuth();
     const movie = movies.find((m) => m.id === Number(id));
 
     const [reviews, setReviews] = useState(() => {
         const saved = localStorage.getItem('reviews-' + id);
         return saved ? JSON.parse(saved) : [];
     });
-    const [username, setUsername] = useState('');
     const [comment, setComment] = useState('');
     const [rating, setRating] = useState(5);
     const [editingId, setEditingId] = useState(null);
@@ -42,12 +43,11 @@ function MovieDetail() {
     function handleAddReview() {
         const newReview = {
             id: Date.now(),
-            username,
+            username: user.username,
             comment,
             rating,
         };
         setReviews([...reviews, newReview]);
-        setUsername('');
         setComment('');
         setRating(5);
     }
@@ -86,28 +86,33 @@ function MovieDetail() {
                     )}
                 </div>
 
-                <div className={styles.reviewForm}>
-                    <h2>Ajouter une review</h2>
-                    <input
-                        type="text"
-                        placeholder="Votre nom"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                    <input
-                        type="number"
-                        min="1"
-                        max="5"
-                        value={rating}
-                        onChange={(e) => setRating(Number(e.target.value))}
-                    />
-                    <textarea
-                        placeholder="Votre commentaire"
-                        value={comment}
-                        onChange={(e) => setComment(e.target.value)}
-                    />
-                    <button onClick={handleAddReview}>Ajouter une review</button>
-                </div>
+                {user ? (
+                    <div className={styles.reviewForm}>
+                        <h2>Ajouter une review</h2>
+                        <input
+                            type="text"
+                            value={user.username}
+                            readOnly
+                        />
+                        <input
+                            type="number"
+                            min="1"
+                            max="5"
+                            value={rating}
+                            onChange={(e) => setRating(Number(e.target.value))}
+                        />
+                        <textarea
+                            placeholder="Votre commentaire"
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}
+                        />
+                        <button onClick={handleAddReview}>Ajouter une review</button>
+                    </div>
+                ) : (
+                    <div className={styles.reviewForm}>
+                        <p><Link to="/login">Connectez-vous</Link> pour laisser une review.</p>
+                    </div>
+                )}
 
                 <div className={styles.reviewList}>
                     {reviews.map((review) => (

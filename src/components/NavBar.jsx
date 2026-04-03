@@ -1,8 +1,11 @@
 import { NavLink, Link } from "react-router";
 import styles from "./NavBar.module.css";
 import Logo from "./Logo";
+import { useAuth } from "../context/AuthContext";
 
 function NavBar() {
+    const { user, logout } = useAuth();
+
     return (
         <nav className={styles.nav}>
             <Link to="/"><Logo /></Link>
@@ -25,6 +28,16 @@ function NavBar() {
                 >
                     Contact
                 </NavLink>
+             </div>
+             <div className={styles.auth}>
+                {user ? (
+                    <>
+                        <span className={styles.username}>{user.username}</span>
+                        <button className={styles.authButton} onClick={logout}>Déconnexion</button>
+                    </>
+                ) : (
+                    <Link to="/login" className={styles.authButton}>Connexion</Link>
+                )}
              </div>
         </nav>
     );

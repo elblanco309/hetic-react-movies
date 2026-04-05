@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { fetchPopularMovies, searchMovies, IMAGE_URL } from '../services/tmdb';
 import MovieCard from '../components/MovieCard';
 import styles from './Home.module.css';
@@ -9,21 +9,48 @@ function Home() {
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
+    const [isFetching, setIsFetching] = useState(false);
+    const [sortBy, setSortBy] = useState('popularity');
+    const [sortOrder, setSortOrder] = useState('desc');
     const sentinelRef = useRef(null);
 
+    const sortedMovies = useMemo(() => {
+        return [...movies].sort((a, b) => {
+            if (sortBy === 'popularity') return sortOrder === 'asc'
+                ? (a.popularity ?? 0) - (b.popularity ?? 0)
+                : (b.popularity ?? 0) - (a.popularity ?? 0);
+            if (sortBy === 'rating') return sortOrder === 'asc'
+                ? (a.vote_average ?? 0) - (b.vote_average ?? 0)
+                : (b.vote_average ?? 0) - (a.vote_average ?? 0);
+            if (sortBy === 'year') return sortOrder === 'asc'
+                ? (a.release_date ?? '').localeCompare(b.release_date ?? '')
+                : (b.release_date ?? '').localeCompare(a.release_date ?? '');
+            if (sortBy === 'title') return sortOrder === 'asc'
+                ? (a.title ?? '').localeCompare(b.title ?? '')
+                : (b.title ?? '').localeCompare(a.title ?? '');
+            return 0;
+        });
+    }, [movies, sortBy, sortOrder]);
+
     useEffect(() => {
+        if (isFetching) return;
+        setIsFetching(true);
         setLoading(true);
+        const dedupe = (prev, results) =>
+            [...prev, ...results].filter((m, i, arr) => arr.findIndex((x) => x.id === m.id) === i);
         if (search === '') {
             fetchPopularMovies(page).then((results) => {
                 if (results.length < 20) setHasMore(false);
-                setMovies((prev) => page === 1 ? results : [...prev, ...results]);
+                setMovies((prev) => page === 1 ? results : dedupe(prev, results));
                 setLoading(false);
+                setIsFetching(false);
             });
         } else {
             searchMovies(search).then((results) => {
                 if (results.length < 20) setHasMore(false);
-                setMovies((prev) => page === 1 ? results : [...prev, ...results]);
+                setMovies((prev) => page === 1 ? results : dedupe(prev, results));
                 setLoading(false);
+                setIsFetching(false);
             });
         }
     }, [search, page]);
@@ -55,8 +82,24 @@ function Home() {
                 onChange={(e) => setSearch(e.target.value)}
                 className={styles.search}
             />
+            <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className={styles.sort}
+            >
+                <option value="popularity">Popularité</option>
+                <option value="rating">Note</option>
+                <option value="year">Année</option>
+                <option value="title">Titre</option>
+            </select>
+            <button
+                onClick={() => setSortOrder((o) => o === 'desc' ? 'asc' : 'desc')}
+                className={styles.sortOrder}
+            >
+                {sortOrder === 'asc' ? '↑' : '↓'}
+            </button>
             <div className={styles.grid}>
-                {movies.map((movie) => (
+                {sortedMovies.map((movie) => (
                     <MovieCard
                         key={movie.id}
                         title={movie.title}
